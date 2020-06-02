@@ -6,8 +6,9 @@ const App = () => {
   const [reincarnation, setReincarnation] = useState(0);
   const [myHand, setMyHand] = useState([]);
   const [yourHand, setYourHand] = useState([]);
+  const [turn, setTurn] = useState("ゲーム開始前");
 
-  const ShuffleDeckButton = () => {
+  const GameStart = () => {
     function shuffle([...array]) {
       for (let i = array.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -16,47 +17,52 @@ const App = () => {
       return array;
     }
 
-    const ShuffleDeck = (e) => {
-      e.preventDefault();
-
-      const newDecks = shuffle(deck);
-      setDeck(newDecks);
-
-      return newDecks[newDecks.length - 1];
-    };
-
-    return <button onClick={ShuffleDeck}>デッキをシャッフル</button>;
-  };
-
-  const GameStart = () => {
     const PushGameStart = (e) => {
       e.preventDefault();
 
-      const copyDeck = deck;
-      const copyReincarnation = copyDeck.pop();
+      const shuffleDeck = shuffle(deck);
+      const copyReincarnation = shuffleDeck.pop();
+      const myDrawCard = shuffleDeck.pop();
+      const yourDrawCard = shuffleDeck.pop();
 
-      setDeck(copyDeck);
+      setDeck(shuffleDeck);
       setReincarnation(copyReincarnation);
-    };
-    return <button onClick={PushGameStart}>ゲームを開始する</button>;
-  };
-
-  const DrawFromDeck = () => {
-    const PushDrawFromDeck = (e) => {
-      e.preventDefault();
-
-      const copyDeck = deck;
-      const myDrawCard = copyDeck.pop();
-      const yourDrawCard = copyDeck.pop();
-
-      setDeck(copyDeck);
       setMyHand(myDrawCard);
       setYourHand(yourDrawCard);
+      setTurn("自分のターンです");
     };
     return (
       <>
-        <button onClick={PushDrawFromDeck}>デッキから１枚引く</button>
-        <div>DrawDeck後のデッキ：{deck}</div>
+        <button onClick={PushGameStart}>ゲームを開始する</button>
+        <div>ゲーム開始後のデッキ：{deck}</div>
+      </>
+    );
+  };
+
+  const DrawCard = () => {
+    const PushDrawCard = (e) => {
+      e.preventDefault();
+      const copyDeck = deck.slice();
+
+      if (turn === "自分のターンです") {
+        const myDrawCard = copyDeck.pop();
+
+        setDeck(copyDeck);
+        setMyHand(myDrawCard);
+        setTurn("相手のターンです");
+      } else {
+        const yourDrawCard = copyDeck.pop();
+
+        setDeck(copyDeck);
+        setYourHand(yourDrawCard);
+        setTurn("自分のターンです");
+      }
+    };
+
+    return (
+      <>
+        <button onClick={PushDrawCard}>ドローする</button>
+        <div>ドロー後のデッキ：{deck}</div>
       </>
     );
   };
@@ -65,15 +71,15 @@ const App = () => {
     <>
       <div>[カード表示]</div>
       <div>デッキ：{deck}</div>
-      {/* <div>デッキの１番上：{deck[deck.length - 1]}</div> */}
       <div>転生札：{reincarnation}</div>
       <div>自分の手札：{myHand}</div>
       <div>相手の手札：{yourHand}</div>
       <div>　　</div>
+      <div>[ターン表示]</div>
+      <div>現在のターン：{turn}</div>
       <div>
-        <ShuffleDeckButton />
         <GameStart />
-        <DrawFromDeck />
+        <DrawCard />
       </div>
     </>
   );
