@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const App = () => {
   const cards = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 10];
+  //const cards = [1, 2, 3, 4, 5];  //test用
   const [deck, setDeck] = useState(cards);
   const [reincarnation, setReincarnation] = useState(0);
   const [myHand, setMyHand] = useState([]);
   const [yourHand, setYourHand] = useState([]);
   const [turn, setTurn] = useState("ゲーム開始前");
+
+  useEffect(() => {
+    console.log(
+      "useEffectのログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
+    );
+    Judgment_WinLoss(deck.length);
+  });
+
+  function Judgment_WinLoss(Deck_length) {
+    if (Deck_length === 0) {
+      if (myHand === yourHand) {
+        console.log("引き分けです");
+      } else if (myHand > yourHand) {
+        console.log("あなたの勝ちです");
+      } else {
+        console.log("あなたの負けです");
+      }
+    } else {
+      return;
+    }
+  }
 
   const GameStart = () => {
     function shuffle([...array]) {
@@ -49,12 +71,14 @@ const App = () => {
 
         setDeck(copyDeck);
         setMyHand(myDrawCard);
+        // カードの効果を発動
         setTurn("相手のターンです");
       } else {
         const yourDrawCard = copyDeck.pop();
 
         setDeck(copyDeck);
         setYourHand(yourDrawCard);
+        // カードの効果を発動
         setTurn("自分のターンです");
       }
     };
