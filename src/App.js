@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const App = () => {
   const cards = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 10];
-  //const cards = [1, 2, 3, 4, 5];       //test用
+  //const cards = [1, 2, 3, 4, 5];     //test用
   const [deck, setDeck] = useState(cards);
   const [reincarnation, setReincarnation] = useState(0);
   const [myHand, setMyHand] = useState([]);
