@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-const App = () => {
-  const cards = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 10];
-  //const cards = [1, 2, 3, 4, 5];     //test用
-  const [deck, setDeck] = useState(cards);
-  const [reincarnation, setReincarnation] = useState(0);
-  const [myHand, setMyHand] = useState([]);
-  const [yourHand, setYourHand] = useState([]);
-  const [turn, setTurn] = useState("ゲーム開始前");
+// import GameStart from './GameStart'
 
+const App = (props) => {
+  const [state, setState] = useState(props);
+  const { deck, reincarnation, myHand, yourHand, turn } = state;
 
   useEffect(() => {
     console.log(
@@ -31,7 +27,7 @@ const App = () => {
     }
   }
 
-  const GameStart = () => {
+  const GameStart = ({ state }) => {
     function shuffle([...array]) {
       for (let i = array.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -43,16 +39,19 @@ const App = () => {
     const PushGameStart = (e) => {
       e.preventDefault();
 
-      const shuffleDeck = shuffle(deck);
+      const shuffleDeck = shuffle(state.deck);
       const copyReincarnation = shuffleDeck.pop();
       const myDrawCard = shuffleDeck.pop();
       const yourDrawCard = shuffleDeck.pop();
 
-      setDeck(shuffleDeck);
-      setReincarnation(copyReincarnation);
-      setMyHand(myDrawCard);
-      setYourHand(yourDrawCard);
-      setTurn("自分のターンです");
+      setState({
+        ...state,
+        deck: shuffleDeck,
+        reincarnation: copyReincarnation,
+        myHand: myDrawCard,
+        yourHand: yourDrawCard,
+        turn: "自分のターン",
+      });
     };
     return (
       <>
@@ -62,25 +61,29 @@ const App = () => {
     );
   };
 
-  const DrawCard = () => {
+  const DrawCard = ({ state }) => {
     const PushDrawCard = (e) => {
       e.preventDefault();
       const copyDeck = deck.slice();
 
-      if (turn === "自分のターンです") {
+      if (turn === "自分のターン") {
         const myDrawCard = copyDeck.pop();
 
-        setDeck(copyDeck);
-        setMyHand(myDrawCard);
-        // カードの効果を発動
-        setTurn("相手のターンです");
+        setState({
+          ...state,
+          deck: copyDeck,
+          myHand: myDrawCard,
+          turn: "相手のターン",
+        });
       } else {
         const yourDrawCard = copyDeck.pop();
 
-        setDeck(copyDeck);
-        setYourHand(yourDrawCard);
-        // カードの効果を発動
-        setTurn("自分のターンです");
+        setState({
+          ...state,
+          deck: copyDeck,
+          yourHand: yourDrawCard,
+          turn: "自分のターン",
+        });
       }
     };
 
@@ -103,11 +106,19 @@ const App = () => {
       <div>[ターン表示]</div>
       <div>現在のターン：{turn}</div>
       <div>
-        <GameStart />
-        <DrawCard />
+        <GameStart state={state} />
+        <DrawCard state={state} />
       </div>
     </>
   );
+};
+
+App.defaultProps = {
+  deck: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 10],
+  reincarnation: 0,
+  myHand: [],
+  yourHand: [],
+  turn: "ゲーム開始前",
 };
 
 export default App;
