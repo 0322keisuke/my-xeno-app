@@ -11,7 +11,13 @@ const App = () => {
 
   useEffect(() => {
     console.log(
-      "useEffectのログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
+      "useEffect①のログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
+    );
+  });
+
+  useEffect(() => {
+    console.log(
+      "useEffect②のログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
     );
     Judgment_WinLoss(deck.length);
   });
