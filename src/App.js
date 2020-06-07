@@ -9,15 +9,10 @@ const App = () => {
   const [yourHand, setYourHand] = useState([]);
   const [turn, setTurn] = useState("ゲーム開始前");
 
-  useEffect(() => {
-    console.log(
-      "useEffect①のログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
-    );
-  });
 
   useEffect(() => {
     console.log(
-      "useEffect②のログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
+      "useEffectのログ：　　myHand is :" + myHand + "  yourHand is :" + yourHand
     );
     Judgment_WinLoss(deck.length);
   });
